@@ -96,3 +96,27 @@ El último paso para que todo funcione es ir a `client/package.json` y agregar l
 Esto es necesario para que el cliente pueda realizar peticiones a la API del server. Ahora sí ya estamos listos para empezar con el código del _frontend_. Veamos un poco más en detalle los archivos que Create React App creó en el directorio `client`.
 
 ## Estructura del proyecto
+
+El directorio `client` se podría considerar un proyecto de NodeJS dentro de nuestro proyecto original que era el server para esta aplicación web. Dentro de `client` tenemos también un `package.json`, podemos instalar dependencias para el _frontend_ que irán a `client/node_modules`.
+
+Después de eliminar algunos archivos innecesarios tenemos lo siguiente dentro de `client`.
+
+```
+.
+├── node_modules
+├── package.json
+├── package-lock.json
+├── public
+│   ├── favicon.ico
+│   ├── index.html
+│   ├── manifest.json
+│   └── robots.txt
+└── src
+    ├── App.js
+    ├── index.js
+    └── serviceWorker.js
+```
+
+En general vamos a editar y crear archivos en `src`, por _source code_ o código fuente. Menos frecuentemente puede ser que editemos algo en `public`.
+
+La cosa funciona así, el archivo `client/index.js` es el punto de entrada del _frontend_. En general ese archivo lo que hace es montar el componente que representa a toda la app en un `div` con `id="root"` en `public/index.html`. El componente principal de la app está definido generalmente en un archivo llamado `App.js` que pueden encontrar en el directorio `src`.
