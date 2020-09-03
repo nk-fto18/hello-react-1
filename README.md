@@ -6,6 +6,15 @@ Una app para tomar notas, hecha en React y usando el _backend_ de [hello-crud](h
 
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
+Breve descripción del framework.
+Enumerar conceptos principales.
+
+- JSX
+- Elementos
+- Propiedades
+- Componentes
+- Estado
+
 ## Creando el proyecto
 
 En el artículo anterior creamos el _backend_ para una app de tomar notas.
@@ -104,6 +113,7 @@ Después de eliminar algunos archivos innecesarios tenemos lo siguiente dentro d
 ```
 .
 ├── node_modules
+├── .gitignore
 ├── package.json
 ├── package-lock.json
 ├── public

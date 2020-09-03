@@ -1,11 +1,17 @@
 import React from 'react';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      
+    <div>
+      <Header />
     </div>
   );
-}
+};
+
+const Header = (props) => {
+  return (
+    <h1>Notas</h1>
+  );
+};
 
 export default App;
