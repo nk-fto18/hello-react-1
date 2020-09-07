@@ -7,6 +7,7 @@ const Container = ({ notes, removeNote, updateNote }) => {
       {notes.map((note, index) => (
         <Note
           index={index}
+          key={index}
           title={note.title}
           text={note.text}
           removeNote={removeNote}

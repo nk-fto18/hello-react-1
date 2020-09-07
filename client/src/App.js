@@ -18,10 +18,17 @@ const App = () => {
   }, []);
   // CRUD functions
   // CREATE
-
+  const createNote = () => {
+    console.log('implementar');
+  };
   // UPDATE
-  const updateNote = index => {
-    console.log('implementar')
+  const updateNote = (index, title, text) => {
+    const newNotes = [...notes];
+    // console.log(index);
+    // console.log(newNotes[0]);
+    newNotes[index].title = title;
+    newNotes[index].text = text;
+    setNotes(newNotes);
   };
   // DELETE
   const removeNote = index => {
