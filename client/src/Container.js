@@ -1,7 +1,7 @@
 import React from 'react';
 import Note from './Note';
 
-const Container = ({ notes }) => {
+const Container = ({ notes, removeNote, updateNote }) => {
   return (
     <div>
       {notes.map((note, index) => (
@@ -9,6 +9,8 @@ const Container = ({ notes }) => {
           index={index}
           title={note.title}
           text={note.text}
+          removeNote={removeNote}
+          updateNote={updateNote}
         />
       ))}
     </div>

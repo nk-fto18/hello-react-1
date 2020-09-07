@@ -16,12 +16,29 @@ const App = () => {
         setNotes(res.data.notes);
       });
   }, []);
+  // CRUD functions
+  // CREATE
+
+  // UPDATE
+  const updateNote = index => {
+    console.log('implementar')
+  };
+  // DELETE
+  const removeNote = index => {
+    const newNotes = [...notes];
+    newNotes.splice(index, 1);
+    setNotes(newNotes);
+  };
   // render JSX
   return (
     <div>
       <Header title='Notas'/>
       <NoteAddForm />
-      <Container notes={notes}/>
+      <Container
+        notes={notes}
+        removeNote={removeNote}
+        updateNote={updateNote}
+      />
       <Footer />
     </div>
   );

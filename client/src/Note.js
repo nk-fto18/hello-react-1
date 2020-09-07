@@ -1,12 +1,13 @@
 import React from 'react';
 
-const Note = ({ title, text, index }) => {
+const Note = ({ title, text, index, removeNote, updateNote }) => {
+  // render JSX
   return (
     <div>
       <h3>{title}</h3>
       <p>{text}</p>
-      <a href="/#">Editar</a>
-      <a href="/#">Borrar</a>
+      <button onClick={() => updateNote(index)}>Guardar</button>
+      <button onClick={() => removeNote(index)}>Eliminar</button>
     </div>
   );
 };
