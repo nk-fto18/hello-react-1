@@ -1,17 +1,31 @@
-import React from 'react';
+// imports
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import Header from './Header';
+import Container from './Container';
+import NoteAddForm from './NoteAddForm';
+import Footer from './Footer';
 
 const App = () => {
+  // useState hook
+  const [notes, setNotes] = useState([]);
+  // useEffect hook
+  useEffect(() => {
+    axios.get('/api/notes')
+      .then(res => {
+        setNotes(res.data.notes);
+      });
+  }, []);
+  // render JSX
   return (
     <div>
-      <Header />
+      <Header title='Notas'/>
+      <NoteAddForm />
+      <Container notes={notes}/>
+      <Footer />
     </div>
   );
 };
 
-const Header = (props) => {
-  return (
-    <h1>Notas</h1>
-  );
-};
-
+// export
 export default App;
