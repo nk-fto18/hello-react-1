@@ -12,6 +12,7 @@ router.get('/notes', (req, res, next) => {
       if (err) return next(err);
       // modifico un poco el resultado antes de mandarlo
       notes = notes.map(note => ({
+        _id: note._id,
         title: note.title,
         text: note.text,
         details: {

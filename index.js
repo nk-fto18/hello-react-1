@@ -21,6 +21,9 @@ mongoose
   })
   .catch(err => console.error(`Connection error ${err}`));
 
+// serve React frontend
+app.use(express.static('public'));
+
 // middleware
 // parsear bodys con json
 app.use(express.json());

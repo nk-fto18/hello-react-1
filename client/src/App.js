@@ -7,8 +7,10 @@ import NoteForm from './NoteForm';
 import Footer from './Footer';
 
 const App = () => {
+
   // useState hook
   const [notes, setNotes] = useState([]);
+
   // useEffect hook
   useEffect(() => {
     axios.get('/api/notes')
@@ -16,25 +18,48 @@ const App = () => {
         setNotes(res.data.notes);
       });
   }, []);
+
   // CRUD functions
-  // CREATE
+  // create note
   const addNote = note => {
-    const newNotes = [note, ...notes];
-    setNotes(newNotes);
+    axios.post('/api/notes', note)
+      .then(res => {
+        const newNotes = [res.data, ...notes];
+        //console.log(newNotes);
+        setNotes(newNotes);
+      });
   };
-  // UPDATE
-  const updateNote = (index, title, text) => {
-    const newNotes = [...notes];
-    newNotes[index].title = title;
-    newNotes[index].text = text;
-    setNotes(newNotes);
+
+  // update note
+  const updateNote = (id, title, text) => {
+    const updatedNote = {
+      title: title,
+      text: text,
+      updatedAt: Date.now()
+    };
+    axios.put('/api/notes/' + id, updatedNote)
+      .then(res => {
+        const newNotes = notes.map(note => {
+          if (note.id === id) {
+            return updatedNote;
+          }
+          return note;
+        });
+        setNotes(newNotes);
+      });
   };
-  // DELETE
-  const removeNote = index => {
-    const newNotes = [...notes];
-    newNotes.splice(index, 1);
-    setNotes(newNotes);
+
+  // delete note
+  const removeNote = (id) => {
+    axios.delete('/api/notes/' + id)
+      .then(res => {
+        console.log(id);
+        const newNotes = notes.filter(note => note._id !== id);
+        console.log(newNotes);
+        setNotes(newNotes);
+    });
   };
+
   // render JSX
   return (
     <div>

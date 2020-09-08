@@ -4,12 +4,12 @@ import Note from './Note';
 const NotesList = ({ notes, removeNote, updateNote }) => {
   return (
     <div className="card-columns">
-      {notes.map((note, index) => (
+      {notes.map((note) => (
         <Note
-          index={index}
-          key={index}
-          title={note.title}
-          text={note.text}
+          id={note._id}
+          key={note._id}
+          initialTitle={note.title}
+          initialText={note.text}
           removeNote={removeNote}
           updateNote={updateNote}
         />
