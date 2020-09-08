@@ -18,14 +18,13 @@ const App = () => {
   }, []);
   // CRUD functions
   // CREATE
-  const createNote = () => {
-    console.log('implementar');
+  const addNote = note => {
+    const newNotes = [note, ...notes];
+    setNotes(newNotes);
   };
   // UPDATE
   const updateNote = (index, title, text) => {
     const newNotes = [...notes];
-    // console.log(index);
-    // console.log(newNotes[0]);
     newNotes[index].title = title;
     newNotes[index].text = text;
     setNotes(newNotes);
@@ -40,7 +39,9 @@ const App = () => {
   return (
     <div>
       <Header title='Notas'/>
-      <NoteAddForm />
+      <NoteAddForm
+        addNote={addNote}
+      />
       <Container
         notes={notes}
         removeNote={removeNote}
