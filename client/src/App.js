@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Header from './Header';
-import Container from './Container';
-import NoteAddForm from './NoteAddForm';
+import NotesList from './NotesList';
+import NoteForm from './NoteForm';
 import Footer from './Footer';
 
 const App = () => {
@@ -39,14 +39,17 @@ const App = () => {
   return (
     <div>
       <Header title='Notas'/>
-      <NoteAddForm
-        addNote={addNote}
-      />
-      <Container
-        notes={notes}
-        removeNote={removeNote}
-        updateNote={updateNote}
-      />
+      <div className="container mt-3">
+        <NoteForm
+          addNote={addNote}
+        />
+        <hr />
+        <NotesList
+          notes={notes}
+          removeNote={removeNote}
+          updateNote={updateNote}
+        />
+      </div>
       <Footer />
     </div>
   );

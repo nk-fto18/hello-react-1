@@ -1,9 +1,9 @@
 import React from 'react';
 import Note from './Note';
 
-const Container = ({ notes, removeNote, updateNote }) => {
+const NotesList = ({ notes, removeNote, updateNote }) => {
   return (
-    <div>
+    <div className="card-columns">
       {notes.map((note, index) => (
         <Note
           index={index}
@@ -18,4 +18,4 @@ const Container = ({ notes, removeNote, updateNote }) => {
   );
 };
 
-export default Container;
+export default NotesList;
