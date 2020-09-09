@@ -3,6 +3,7 @@ const express  = require('express');
 const mongoose = require('mongoose');
 const cors     = require('cors');
 const morgan   = require('morgan');
+const path     = require('path');
 
 // config vars
 const port = process.env.PORT        || 4000;
@@ -23,6 +24,9 @@ mongoose
 
 // serve React frontend
 app.use(express.static('public'));
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // middleware
 // parsear bodys con json

@@ -699,4 +699,31 @@ Y con esto debería estar terminado el _frontend_ en React. Faltaría compilar y
 
 ## Build & deploy
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Antes de hacer el _deploy_ de la app tenemos que compilarla. Hasta ahora la app que estabamos viendo mientras desarrollamos en `http://localhost:3000` era una versión de desarrolo. Para compilar la app de React y convertirla en _static assets_ usamos desde el directorio `client` el _script_ `build`.
+
+```console
+$ npm run build
+```
+
+Esto produce una versión lista para hacer el _deploy_ en el directorio `client/build`. Podemos usar el `index.js` de nuestro _backend_ para servir la app. Pero primero creamos un directorio `public` en nuestro proyecto y movemos todo el contenido de `hello-react/client/build` a `hello-react/public`.
+
+Ahora sí, en `hello-react/index.js` agregamos
+
+```js
+// imports
+// path es un modulo base de NodeJS, no hay que instalarlo con npm
+const path = require('path');
+// mas imports ...
+
+// codigo ...
+
+// despues de conectarse a la base de datos
+app.use(express.static('public'));
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+```
+
+Y con esto le decimos a nuestra app de Express que envíe el `index.html` para la ruta `/` de nuestro server. Todos los _assets_ estáticos de la app están en `public`, por eso usamos `express.static('public')`.
+
+Y listo con esto terminamos y tenemos nuestra primer _web app_ con el _stack_ MERN :tada:!
