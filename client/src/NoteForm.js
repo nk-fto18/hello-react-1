@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 
 const NoteForm = ({ addNote }) => {
-  // state hook
+
+  // state hook para el form
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
+
   // handlers
   const handleSubmit = e => {
     e.preventDefault();
@@ -11,9 +13,12 @@ const NoteForm = ({ addNote }) => {
       title: title,
       text: text
     });
+    // blanquear formulario
     setTitle('');
     setText('');
   };
+
+  // render JSX
   return (
     <form onSubmit={handleSubmit}>
       <div className="form-group">

@@ -12,19 +12,13 @@ const Note = ({ id, initialTitle, initialText, removeNote, updateNote }) => {
   const [editable, setEditable] = useState(false);
 
   // handlers
-  // edit handler
-  const handleEdit = () => {
-    // console.log(editable); // DEBUG
-    setEditable(!editable);
-  };
   // save handler
   const handleSave = () => {
-    // console.log('estoy en handlesave', title, text);
     updateNote(id, title, text);
     setEditable(!editable);
   };
 
-  // CSS
+  // CSS override de bootstrap
   const inputStyle = {
     backgroundColor: 'transparent',
     border: 'none',
@@ -60,7 +54,7 @@ const Note = ({ id, initialTitle, initialText, removeNote, updateNote }) => {
         </textarea>
         <br />
 
-        <button className="btn" hidden={editable} onClick={handleEdit}>
+        <button className="btn" hidden={editable} onClick={() => setEditable(!editable)}>
           <i className="text-secondary fa fa-pencil fa-lg"></i>
         </button>
 

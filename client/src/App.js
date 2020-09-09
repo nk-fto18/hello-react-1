@@ -8,10 +8,10 @@ import Footer from './Footer';
 
 const App = () => {
 
-  // useState hook
+  // useState hook (las notas de la lista)
   const [notes, setNotes] = useState([]);
 
-  // useEffect hook
+  // useEffect hook (para fetchear la data al cargar)
   useEffect(() => {
     axios.get('/api/notes')
       .then(res => {
@@ -25,7 +25,6 @@ const App = () => {
     axios.post('/api/notes', note)
       .then(res => {
         const newNotes = [res.data, ...notes];
-        //console.log(newNotes);
         setNotes(newNotes);
       });
   };
@@ -34,17 +33,13 @@ const App = () => {
   const updateNote = (id, title, text) => {
     const updatedNote = {
       title: title,
-      text: text,
-      updatedAt: Date.now()
+      text: text
     };
     axios.put('/api/notes/' + id, updatedNote)
       .then(res => {
-        const newNotes = notes.map(note => {
-          if (note.id === id) {
-            return updatedNote;
-          }
-          return note;
-        });
+        const newNotes = notes.map(note =>
+          note.id === id ? updatedNote : note
+        );
         setNotes(newNotes);
       });
   };
@@ -53,9 +48,7 @@ const App = () => {
   const removeNote = (id) => {
     axios.delete('/api/notes/' + id)
       .then(res => {
-        console.log(id);
         const newNotes = notes.filter(note => note._id !== id);
-        console.log(newNotes);
         setNotes(newNotes);
     });
   };
