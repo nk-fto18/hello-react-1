@@ -17,7 +17,7 @@ Un componente en React está formado por elementos. Un elemento en React tiene e
 const element = <h1>Hello, world!</h1>;
 ```
 
-Esta sintaxis que usa React es una extensión de JavaScript llamada JSX. Los componentes de React son archivos de JavaScript que pueden utilizar expresiones de JSX para definir elementos de la interfaz de usuario.
+Esta sintaxis que usa React es una extensión de JavaScript llamada JSX. Los componentes de React son funciones de JavaScript que pueden utilizar expresiones de JSX para definir elementos de la interfaz de usuario.
 
 En general la sintaxis de los elementos en React es la de las etiquetas de HTML, pero JSX no es HTML y hay varias excepciones que vamos a ir viendo. La más conocida, para dar un ejemplo, es la del atributo `class` en un elemento.
 
@@ -472,11 +472,230 @@ Lo que hace `handleSubmit` es llamar a `addNote` con los datos del formulario. S
 
 ## La lista de notas y useEffect
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Para armar la lista de notas vamos a usar dos componentes. El primero representa la lista con todas las notas, el segundo una nota individual.
+Para traer los datos de las notas de la base de datos tenemos que hacer una petición a la API con Axios apenas cargue la aplicación.
+
+Para este tipo de _requests_ podemos usar el _hook_ `useEffect` en React. Este _hook_ se ejecuta cuando un componente termina de renderizarse. La función que le pasamos a `useEffect` la vamos a usar para realizar la petición en el componente App y actualizar su estado, es decir, el _array_ que guarda las notas. Ahora `App.js` quedaría así.
+
+```js
+// imports
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import Header from './Header';
+import NotesList from './NotesList';
+import NoteForm from './NoteForm';
+import Footer from './Footer';
+
+const App = () => {
+
+  // useState hook (las notas de la lista)
+  const [notes, setNotes] = useState([]);
+
+  // useEffect hook (para fetchear la data al cargar)
+  useEffect(() => {
+    axios.get('/api/notes')
+      .then(res => {
+        setNotes(res.data.notes);
+      });
+  }, []);
+
+  // CRUD functions
+  // crear nota
+  const addNote = note => {
+    axios.post('/api/notes', note)
+      .then(res => {
+        const newNotes = [res.data, ...notes];
+        setNotes(newNotes);
+      });
+  };
+
+  // actualizar nota
+  const updateNote = (id, title, text) => {
+    const updatedNote = {
+      title: title,
+      text: text
+    };
+    axios.put('/api/notes/' + id, updatedNote)
+      .then(res => {
+        const newNotes = notes.map(note =>
+          note.id === id ? updatedNote : note
+        );
+        setNotes(newNotes);
+      });
+  };
+
+  // eliminar nota
+  const removeNote = (id) => {
+    axios.delete('/api/notes/' + id)
+      .then(res => {
+        const newNotes = notes.filter(note => note._id !== id);
+        setNotes(newNotes);
+    });
+  };
+
+  // render JSX
+  return (
+    <div>
+      <Header title='Notas'/>
+      <div className="container mt-3">
+        <NoteForm
+          addNote={addNote}
+        />
+        <hr />
+        <NotesList
+          notes={notes}
+          removeNote={removeNote}
+          updateNote={updateNote}
+        />
+      </div>
+      <Footer />
+    </div>
+  );
+};
+
+export default App;
+```
+
+Ya con esto `App.js` está terminado. Noten que `useEffect` lleva dos argumentos. El primero es una _callback_ que se ejecuta cuando el componente termina de actualizar la UI, el segundo es un _array_ con variables. En ese _array_ podemos poner variables, y cuando esas variables cambian el _hook_ vuelve a dispararse. Para evitar que el _hook_ se ejecute infinitamente le pasamos un _array_ vacío.
+
+También actualizamos el JSX en el `return`, ahora ponemos un `<hr>` después del formulario y el componente NotesList. NotesList recibe `props` de App, el _array_ de notas y las funciones para eliminar y modificar una nota. Todavía no tenemos el código de `NotesList.js` así que es normal que dé error en este punto.
+
+El componente NotesList sería algo así.
+
+```js
+import React from 'react';
+import Note from './Note';
+
+const NotesList = ({ notes, removeNote, updateNote }) => {
+
+  // render JSX
+  return (
+    <div className="card-columns">
+      {notes.map((note) => (
+        <Note
+          id={note._id}
+          key={note._id}
+          initialTitle={note.title}
+          initialText={note.text}
+          removeNote={removeNote}
+          updateNote={updateNote}
+        />
+      ))}
+    </div>
+  );
+};
+
+export default NotesList;
+```
+
+NotesList es un `<div>` que utiliza el componente Note internamente, por eso lo importa en la segunda línea. Usamos `notes.map()` para iterar sobre el _array_ de notas y crear un componente Note por cada nota. Cada componente Note recibe `props` de NotesList: el ID, título y texto, así como las funciones `removeNote` y `updateNote`.
+
+Cuando hacemos listas de componentes en React la librería nos pide que pasemos una propiedad llamada `key` que sea única para cada componente en la lista. Podemos usar el ID de cada nota para esto.
 
 ## Note.js
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Bueno, solo nos falta el componente Note. Copio el código y luego lo explico.
+
+```js
+import React, { useState } from 'react';
+
+const Note = ({ id, initialTitle, initialText, removeNote, updateNote }) => {
+
+  // note title state
+  const [title, setTitle] = useState(initialTitle);
+  // note text state
+  const [text, setText] = useState(initialText);
+  // editable state
+  const [editable, setEditable] = useState(false);
+
+  // handlers
+  // save handler
+  const handleSave = () => {
+    updateNote(id, title, text);
+    setEditable(!editable);
+  };
+
+  // CSS override de bootstrap
+  const inputStyle = {
+    backgroundColor: 'transparent',
+    border: 'none',
+    fontSize: 1.25+'rem',
+    marginBottom: 0.75+'rem'
+  };
+  const textareaStyle = {
+    backgroundColor: 'transparent',
+    border: 'none'
+  };
+
+  // render JSX
+  return (
+    <div className="card">
+      <div className="card-body">
+
+        <input
+          style={inputStyle}
+          spellCheck={false}
+          disabled={!editable}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+
+        <textarea
+          rows={5}
+          style={textareaStyle}
+          spellCheck={false}
+          disabled={!editable}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        >
+        </textarea>
+        <br />
+
+        <button className="btn" hidden={editable} onClick={() => setEditable(!editable)}>
+          <i className="text-secondary fa fa-pencil fa-lg"></i>
+        </button>
+
+        <button className="btn" hidden={!editable} onClick={handleSave}>
+          <i className="text-secondary fa fa-save fa-lg"></i>
+        </button>
+
+        <button className="btn" onClick={() => removeNote(id)}>
+          <i className="text-danger fa fa-trash fa-lg"></i>
+        </button>
+
+      </div>
+    </div>
+  );
+};
+
+export default Note;
+```
+
+Cada nota es una _card_ de Bootstrap, un `<div className="card">`. Cada una de estas tarjetas contiene _inputs_ para el título y el texto y dos botones: editar y eliminar. Al presionar el botón de editar podemos cambiar el título y el texto de la nota y vemos un botón de guardar.
+
+Cada una de estas notas tienen estado, así que usamos `useState` para definir tres variables de estado. El título, el texto y si la nota es editable o no. El estado de "ser editable" lo cambiamos al usar el botón de editar y guardar.
+
+Cuando la nota es editable usamos `setText` y `setTitle` con el _listener_ `onChange` para cambiar el estado a medida que tipeamos. Podemos usar el atributo `disabled` para que los _inputs_ estén desactivados y no sean editables hasta presionar el botón de editar.
+
+Las funciones asociadas a cada botón se disparan usando el _listener_ `onClick`, cuando la función tiene una sola línea podemos escribirla directamente ahí como en `onClick={() => remoteNote(id)}`. Si la función fuera más complicada podemos escribirla fuera del `return` y pasar el nombre como en el caso de `onClick={handleSave}`.
+
+Usamos íconos de Font Awesome para los botones (los _tags_ `<i>`) y también usamos el atributo `style` en los _inputs_ para sobreescribir los estilos por defecto de Bootstrap, para que el `<input>` y el `<textarea>` no se vean como salen generalmente en un formulario. Noten que para escribir CSS usando el atributo `style` tenemos que escribir las propiedades y sus valores como si fueran objetos de JS y en _camelCase_ en vez de _kebab-case_ como en CSS.
+
+Por ejemplo, si queremos cambiar el color de fondo, en CSS:
+
+```css
+p {
+  background-color: red;
+}
+```
+
+En React
+
+```js
+<p style={{ backgroundColor: 'red' }}>Lorem ipsum</p>
+```
+
+Y con esto debería estar terminado el _frontend_ en React. Faltaría compilar y hacer el _deploy_.
 
 ## Build & deploy
 
