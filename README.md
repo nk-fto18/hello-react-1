@@ -382,7 +382,9 @@ const App = () => {
     <div>
       <Header title='Notas'/>
       <div className="container mt-3">
-
+        <NoteForm
+          addNote={addNote}
+        />
       </div>
       <Footer />
     </div>
@@ -400,3 +402,82 @@ En `addNote()` recibimos como argumento un objeto que representa una nota y desp
 En `updateNote()` recibimos como argumentos el ID, el título y el texto de la nota a modificar. Después de recibir la respuesta del servidor usamos `notes.map()` para devolver un _array_ idéntico a `notes` excepto por la posición que modificamos.
 
 En `deleteNote()` usamos el ID de la nota para hacer la petición a la API y modificamos el _array_ de notas con `notes.filter()` que devuelve un array con todos los elementos que cumplan con la condición `note._id !== id`.
+
+En el `return` de App agregué un `<div>` que hace de contenedor de Bootstrap y el componente NoteForm. Por ahora va a dar error porque no tenemos nada en `NoteForm.js`.
+
+## NoteForm
+
+En este componente vamos a armar un formulario para agregar notas. Vamos a recibir como propiedad la función `addNote` desde App.
+
+```js
+import React, { useState } from 'react';
+
+const NoteForm = ({ addNote }) => {
+
+  // state hooks para el form
+  const [title, setTitle] = useState('');
+  const [text, setText] = useState('');
+
+  // handler para el submit
+  const handleSubmit = e => {
+    e.preventDefault();
+    addNote({
+      title: title,
+      text: text
+    });
+    // blanquear formulario
+    setTitle('');
+    setText('');
+  };
+
+  // render JSX
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="form-group">
+        <label htmlFor="title">Título</label>
+        <input
+          id="title"
+          className="form-control"
+          type='text'
+          value={title}
+          onChange={e => setTitle(e.target.value)}
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="text">Texto</label>
+        <textarea
+          id="text"
+          className="form-control"
+          value={text}
+          rows="4"
+          onChange={e => setText(e.target.value)}
+        >
+        </textarea>
+      </div>
+      <input
+        className="btn btn-primary"
+        type="submit"
+        value="Guardar"
+      />
+    </form>
+  );
+};
+
+export default NoteForm;
+```
+
+En este componente definimos dos _hooks_ de estado, uno para cada _input_ del formulario que tiene un `<input type="text">` y un `<textarea>` para el título y el texto de la nota. Usamos el evento `onChange` en cada _input_ para setear el estado y usamos una función llamada `handleSubmit` como acción cuando enviamos el formulario.
+
+Lo que hace `handleSubmit` es llamar a `addNote` con los datos del formulario. Si bien `addNote` era una función de App acá la tenemos disponible porque la pasamos como `prop`. Antes de que termine `handleSubmit` blanqueamos el formulario con `setTitle('')` y `setText('')`.
+
+## La lista de notas y useEffect
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+## Note.js
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+## Build & deploy
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
