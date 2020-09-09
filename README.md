@@ -677,7 +677,7 @@ Cada una de estas notas tienen estado, así que usamos `useState` para definir t
 
 Cuando la nota es editable usamos `setText` y `setTitle` con el _listener_ `onChange` para cambiar el estado a medida que tipeamos. Podemos usar el atributo `disabled` para que los _inputs_ estén desactivados y no sean editables hasta presionar el botón de editar.
 
-Las funciones asociadas a cada botón se disparan usando el _listener_ `onClick`, cuando la función tiene una sola línea podemos escribirla directamente ahí como en `onClick={() => remoteNote(id)}`. Si la función fuera más complicada podemos escribirla fuera del `return` y pasar el nombre como en el caso de `onClick={handleSave}`.
+Las funciones asociadas a cada botón se disparan usando el _listener_ `onClick`. Cuándo la función tiene una sola línea podemos escribirla directamente ahí como en `onClick={() => remoteNote(id)}`. Si la función fuera más complicada podemos escribirla fuera del `return` y pasar el nombre como en el caso de `onClick={handleSave}`.
 
 Usamos íconos de Font Awesome para los botones (los _tags_ `<i>`) y también usamos el atributo `style` en los _inputs_ para sobreescribir los estilos por defecto de Bootstrap, para que el `<input>` y el `<textarea>` no se vean como salen generalmente en un formulario. Noten que para escribir CSS usando el atributo `style` tenemos que escribir las propiedades y sus valores como si fueran objetos de JS y en _camelCase_ en vez de _kebab-case_ como en CSS.
 
@@ -725,5 +725,13 @@ app.get('/', (req, res) => {
 ```
 
 Y con esto le decimos a nuestra app de Express que envíe el `index.html` para la ruta `/` de nuestro server. Todos los _assets_ estáticos de la app están en `public`, por eso usamos `express.static('public')`.
+
+Subir esto a Heroku es exactamente igual que lo que hicimos con [hello-database](https://github.com/santiagotrini/hello-database).
+
+1. Suben el código a GitHub
+2. Crean la app en Heroku
+3. Crean una base de datos en MongoDB Atlas
+4. Setean `MONGODB_URI` en las _config vars_ de Heroku
+5. Conectan el repo de GitHub a su app de Heroku y listo
 
 Y listo con esto terminamos y tenemos nuestra primer _web app_ con el _stack_ MERN :tada:!
